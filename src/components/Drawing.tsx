@@ -1,8 +1,8 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useMemo } from 'react';
 import { Screen } from '../types';
 import ActivityLayout from './ActivityLayout';
 import { playSound, speak } from '../utils';
-import { Pencil, Eraser, Trash2, Download, PaintBucket, Circle, Square } from 'lucide-react';
+import { Pencil, Eraser, Trash2, Download, PaintBucket, Circle, Square, Wand2 } from 'lucide-react';
 import { VOCABULARY } from '../data';
 import { useScore } from '../ScoreContext';
 import { fillCanvas } from './floodFill';
@@ -16,17 +16,25 @@ export default function Drawing({ onNavigate }: Props) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [level, setLevel] = useState(1);
   const [isDrawing, setIsDrawing] = useState(false);
-  const [mode, setMode] = useState<'pencil' | 'eraser' | 'bucket' | 'circle' | 'square'>('pencil');
+  const [mode, setMode] = useState<'pencil' | 'eraser' | 'bucket' | 'circle' | 'square' | 'rainbow'>('pencil');
   const [color, setColor] = useState('#3b82f6'); // blue
   const [hasDrawn, setHasDrawn] = useState(false);
   const [startPos, setStartPos] = useState<{x: number, y: number} | null>(null);
   const [snapshot, setSnapshot] = useState<ImageData | null>(null);
+  const hueRef = useRef(0);
   const { addScore } = useScore();
+
+  const [strokeWidth, setStrokeWidth] = useState<'thin' | 'medium' | 'thick'>('medium');
+
+  const gameItems = useMemo(() => {
+    return [...VOCABULARY].sort(() => Math.random() - 0.5);
+  }, []);
   
-  const currentItem = VOCABULARY[level - 1];
+  const currentItem = gameItems[level - 1];
 
   const colors = [
-    '#ef4444', '#f97316', '#eab308', '#22c55e', '#3b82f6', '#a855f7', '#1e293b'
+    '#ef4444', '#f97316', '#eab308', '#22c55e', '#3b82f6', '#a855f7', '#1e293b',
+    '#f43f5e', '#06b6d4', '#8b5cf6', '#14b8a6', '#64748b'
   ];
 
   useEffect(() => {
@@ -130,10 +138,12 @@ export default function Drawing({ onNavigate }: Props) {
     const x = clientX - rect.left;
     const y = clientY - rect.top;
 
+    const baseWidth = strokeWidth === 'thin' ? 4 : strokeWidth === 'medium' ? 12 : 24;
+    
     if (mode === 'circle' || mode === 'square') {
         if (!startPos || !snapshot) return;
         ctx.putImageData(snapshot, 0, 0);
-        ctx.lineWidth = 6;
+        ctx.lineWidth = baseWidth;
         ctx.strokeStyle = color;
         ctx.beginPath();
         if (mode === 'square') {
@@ -146,8 +156,14 @@ export default function Drawing({ onNavigate }: Props) {
         return;
     }
 
-    ctx.lineWidth = mode === 'eraser' ? 40 : 12;
-    ctx.strokeStyle = mode === 'eraser' ? '#ffffff' : color;
+    ctx.lineWidth = mode === 'eraser' ? 40 : baseWidth;
+    
+    if (mode === 'rainbow') {
+        hueRef.current = (hueRef.current + 2) % 360;
+        ctx.strokeStyle = `hsl(${hueRef.current}, 100%, 50%)`;
+    } else {
+        ctx.strokeStyle = mode === 'eraser' ? '#ffffff' : color;
+    }
 
     ctx.lineTo(x, y);
     ctx.stroke();
@@ -184,61 +200,96 @@ export default function Drawing({ onNavigate }: Props) {
     >
       <div className="flex-1 w-full flex flex-col lg:flex-row gap-6 p-4 md:p-8 max-w-[1400px]">
         {/* Tools Palette */}
-        <div className="flex flex-row lg:flex-col justify-center items-center gap-4 bg-white p-4 md:p-6 rounded-[32px] md:rounded-[48px] border-4 border-amber-200 shadow-xl shrink-0 flex-wrap">
+        <div className="flex flex-col lg:w-48 bg-white p-4 md:p-6 rounded-[32px] md:rounded-[48px] border-4 border-amber-200 shadow-xl shrink-0 overflow-y-auto">
           
-          <button 
-            onClick={() => { playSound('click'); setMode('pencil'); speak('Pencil'); }}
-            className={`w-14 h-14 md:w-16 md:h-16 rounded-3xl flex items-center justify-center transition-all bg-white border-4 ${mode === 'pencil' ? 'border-amber-400 -translate-y-1' : 'border-slate-100 hover:border-slate-200'}`}
-          >
-            <Pencil size={24} className={mode === 'pencil' ? 'text-amber-500' : 'text-slate-400'} />
-          </button>
-          
-          <button 
-            onClick={() => { playSound('click'); setMode('eraser'); speak('Eraser'); }}
-            className={`w-14 h-14 md:w-16 md:h-16 rounded-3xl flex items-center justify-center transition-all bg-white border-4 ${mode === 'eraser' ? 'border-pink-400 -translate-y-1' : 'border-slate-100 hover:border-slate-200'}`}
-          >
-            <Eraser size={24} className={mode === 'eraser' ? 'text-pink-500' : 'text-slate-400'} />
-          </button>
+          <div className="flex flex-row lg:flex-col justify-center items-center gap-4 flex-wrap">
+            <button 
+              onClick={() => { playSound('click'); setMode('pencil'); speak('Pencil'); }}
+              className={`w-12 h-12 md:w-14 md:h-14 rounded-2xl flex items-center justify-center transition-all bg-white border-4 ${mode === 'pencil' ? 'border-amber-400 -translate-y-1' : 'border-slate-100 hover:border-slate-200'}`}
+            >
+              <Pencil size={24} className={mode === 'pencil' ? 'text-amber-500' : 'text-slate-400'} />
+            </button>
+            
+            <button 
+              onClick={() => { playSound('click'); setMode('eraser'); speak('Eraser'); }}
+              className={`w-12 h-12 md:w-14 md:h-14 rounded-2xl flex items-center justify-center transition-all bg-white border-4 ${mode === 'eraser' ? 'border-pink-400 -translate-y-1' : 'border-slate-100 hover:border-slate-200'}`}
+            >
+              <Eraser size={24} className={mode === 'eraser' ? 'text-pink-500' : 'text-slate-400'} />
+            </button>
 
-          <button 
-            onClick={() => { playSound('click'); setMode('bucket'); speak('Fill'); }}
-            className={`w-14 h-14 md:w-16 md:h-16 rounded-3xl flex items-center justify-center transition-all bg-white border-4 ${mode === 'bucket' ? 'border-blue-400 -translate-y-1' : 'border-slate-100 hover:border-slate-200'}`}
-          >
-            <PaintBucket size={24} className={mode === 'bucket' ? 'text-blue-500' : 'text-slate-400'} />
-          </button>
+            <button 
+              onClick={() => { playSound('click'); setMode('bucket'); speak('Fill'); }}
+              className={`w-12 h-12 md:w-14 md:h-14 rounded-2xl flex items-center justify-center transition-all bg-white border-4 ${mode === 'bucket' ? 'border-blue-400 -translate-y-1' : 'border-slate-100 hover:border-slate-200'}`}
+            >
+              <PaintBucket size={24} className={mode === 'bucket' ? 'text-blue-500' : 'text-slate-400'} />
+            </button>
 
-          <button 
-            onClick={() => { playSound('click'); setMode('square'); speak('Square'); }}
-            className={`w-14 h-14 md:w-16 md:h-16 rounded-3xl flex items-center justify-center transition-all bg-white border-4 ${mode === 'square' ? 'border-emerald-400 -translate-y-1' : 'border-slate-100 hover:border-slate-200'}`}
-          >
-            <Square size={24} className={mode === 'square' ? 'text-emerald-500' : 'text-slate-400'} />
-          </button>
+            <button 
+              onClick={() => { playSound('click'); setMode('square'); speak('Square'); }}
+              className={`w-12 h-12 md:w-14 md:h-14 rounded-2xl flex items-center justify-center transition-all bg-white border-4 ${mode === 'square' ? 'border-emerald-400 -translate-y-1' : 'border-slate-100 hover:border-slate-200'}`}
+            >
+              <Square size={24} className={mode === 'square' ? 'text-emerald-500' : 'text-slate-400'} />
+            </button>
 
-          <button 
-            onClick={() => { playSound('click'); setMode('circle'); speak('Circle'); }}
-            className={`w-14 h-14 md:w-16 md:h-16 rounded-3xl flex items-center justify-center transition-all bg-white border-4 ${mode === 'circle' ? 'border-purple-400 -translate-y-1' : 'border-slate-100 hover:border-slate-200'}`}
-          >
-            <Circle size={24} className={mode === 'circle' ? 'text-purple-500' : 'text-slate-400'} />
-          </button>
+            <button 
+              onClick={() => { playSound('click'); setMode('circle'); speak('Circle'); }}
+              className={`w-12 h-12 md:w-14 md:h-14 rounded-2xl flex items-center justify-center transition-all bg-white border-4 ${mode === 'circle' ? 'border-purple-400 -translate-y-1' : 'border-slate-100 hover:border-slate-200'}`}
+            >
+              <Circle size={24} className={mode === 'circle' ? 'text-purple-500' : 'text-slate-400'} />
+            </button>
 
-          <div className="h-1 md:h-2 w-full bg-amber-100 rounded-full my-1"></div>
+            <button 
+              onClick={() => { playSound('click'); setMode('rainbow'); speak('Rainbow'); }}
+              className={`w-12 h-12 md:w-14 md:h-14 rounded-2xl flex items-center justify-center transition-all bg-white border-4 ${mode === 'rainbow' ? 'border-pink-400 -translate-y-1' : 'border-slate-100 hover:border-slate-200'} overflow-hidden relative`}
+            >
+              {mode === 'rainbow' && <div className="absolute inset-0 bg-gradient-to-br from-rose-100 via-fuchsia-100 to-indigo-100 opacity-50" />}
+              <Wand2 size={24} className={`relative z-10 ${mode === 'rainbow' ? 'text-rose-500' : 'text-slate-400'}`} />
+            </button>
+          </div>
+
+          <div className="h-1 w-full bg-amber-100 rounded-full my-4"></div>
+
+          {/* Line widths */}
+          <div className="flex flex-row lg:flex-col gap-3 items-center justify-center mb-4">
+             <button onClick={() => { playSound('click'); setStrokeWidth('thin'); }} className={`w-10 h-10 flex items-center justify-center rounded-xl border-2 transition-all ${strokeWidth === 'thin' ? 'border-amber-400 bg-amber-50' : 'border-transparent'}`}>
+                <div className="bg-slate-800 rounded-full w-2 h-2"></div>
+             </button>
+             <button onClick={() => { playSound('click'); setStrokeWidth('medium'); }} className={`w-10 h-10 flex items-center justify-center rounded-xl border-2 transition-all ${strokeWidth === 'medium' ? 'border-amber-400 bg-amber-50' : 'border-transparent'}`}>
+                <div className="bg-slate-800 rounded-full w-4 h-4"></div>
+             </button>
+             <button onClick={() => { playSound('click'); setStrokeWidth('thick'); }} className={`w-10 h-10 flex items-center justify-center rounded-xl border-2 transition-all ${strokeWidth === 'thick' ? 'border-amber-400 bg-amber-50' : 'border-transparent'}`}>
+                <div className="bg-slate-800 rounded-full w-6 h-6"></div>
+             </button>
+          </div>
+
+          <div className="h-1 w-full bg-amber-100 rounded-full my-4"></div>
 
           {/* Color palette */}
-          <div className="flex md:flex-col gap-4 items-center mt-2">
+          <div className="grid grid-cols-6 lg:grid-cols-2 gap-2 mt-2 justify-items-center relative">
             {colors.map(c => (
               <button
                 key={c}
-                onClick={() => { playSound('click'); setColor(c); if(mode==='eraser') setMode('pencil'); }}
-                className={`w-10 h-10 md:w-14 md:h-14 rounded-full border-b-4 transition-all ${color === c && mode !== 'eraser' ? 'scale-110 border-transparent shadow-lg -translate-y-1' : 'border-black/20 hover:-translate-y-1 shadow-sm'}`}
+                onClick={() => { playSound('click'); setColor(c); if(mode==='eraser' || mode==='rainbow') setMode('pencil'); }}
+                className={`w-8 h-8 md:w-10 md:h-10 rounded-full border-b-4 transition-all ${color === c && mode !== 'eraser' && mode !== 'rainbow' ? 'scale-110 border-transparent shadow-lg -translate-y-1' : 'border-black/20 hover:-translate-y-1 shadow-sm'}`}
                 style={{ backgroundColor: c }}
               />
             ))}
+            <label 
+               className={`w-8 h-8 md:w-10 md:h-10 rounded-full border-b-4 transition-all cursor-pointer flex items-center justify-center bg-[conic-gradient(from_0deg,red,yellow,lime,aqua,blue,magenta,red)] overflow-hidden relative ${!colors.includes(color) && mode !== 'eraser' && mode !== 'rainbow' ? 'scale-110 border-transparent shadow-lg -translate-y-1' : 'border-black/20 hover:-translate-y-1 shadow-sm'}`}
+            >
+              <input 
+                type="color" 
+                value={color} 
+                onChange={(e) => { setColor(e.target.value); if(mode==='eraser' || mode==='rainbow') setMode('pencil'); }}
+                className="opacity-0 w-[200%] h-[200%] cursor-pointer absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
+              />
+            </label>
           </div>
 
-          <div className="flex-1"></div>
+          <div className="flex-1 mt-6"></div>
 
           {/* Actions */}
-          <div className="flex lg:flex-col gap-4 lg:mt-auto pt-0 lg:pt-4 items-center">
+          <div className="flex lg:flex-col gap-4 mt-auto items-center justify-center">
              <button 
                onClick={handleClear}
                className="w-16 h-16 md:w-20 md:h-20 bg-rose-50 text-rose-500 border-2 border-rose-200 rounded-3xl flex items-center justify-center hover:bg-rose-100 hover:border-rose-300 transition-colors"

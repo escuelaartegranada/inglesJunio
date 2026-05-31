@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { Screen } from '../types';
 import ActivityLayout from './ActivityLayout';
 import { VOCABULARY } from '../data';
@@ -18,25 +18,23 @@ export default function TickCross({ onNavigate }: Props) {
   const [answers, setAnswers] = useState<Record<string, boolean>>({});
   const { addScore } = useScore();
 
-  const currentItem = VOCABULARY[currentIndex];
+  const gameItems = useMemo(() => {
+    return [...VOCABULARY].sort(() => Math.random() - 0.5);
+  }, []);
+
+  const currentItem = gameItems[currentIndex];
 
   useEffect(() => {
     speak(`Can you ${currentItem.en}?`);
   }, [currentIndex, currentItem.en]);
 
   const handleNext = () => {
-    if (currentIndex < VOCABULARY.length - 1) {
+    if (currentIndex < gameItems.length - 1) {
       setCurrentIndex(prev => prev + 1);
     } else {
       playSound('pop');
       setCurrentIndex(0);
       setAnswers({});
-    }
-  };
-
-  const handlePrev = () => {
-    if (currentIndex > 0) {
-      setCurrentIndex(prev => prev - 1);
     }
   };
 
@@ -72,9 +70,8 @@ export default function TickCross({ onNavigate }: Props) {
       onNavigate={onNavigate}
       onRepeatAudio={handleRepeat}
       onNext={handleNext}
-      onPrev={currentIndex > 0 ? handlePrev : undefined}
       currentLevel={currentIndex + 1}
-      totalLevels={VOCABULARY.length}
+      totalLevels={gameItems.length}
     >
       <div className="flex-1 w-full flex flex-col items-center justify-center p-8 max-w-5xl">
         <AnimatePresence mode="wait">
