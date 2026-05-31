@@ -55,7 +55,10 @@ export default function Home({ onNavigate }: HomeProps) {
       
         <div className="flex items-center gap-2 md:gap-3 bg-white px-4 py-2 md:px-6 md:py-4 rounded-full md:rounded-3xl border-2 md:border-4 border-amber-200 shadow-lg shrink-0">
            <Star className="text-amber-500 w-6 h-6 md:w-10 md:h-10 fill-amber-500" />
-           <span className="text-2xl md:text-4xl font-black text-amber-700 leading-none">{score}</span>
+           <div className="flex flex-col items-start leading-none gap-1">
+             <span className="text-[10px] md:text-[14px] font-black text-amber-500 uppercase tracking-widest hidden sm:block">Score (Puntuación)</span>
+             <span className="text-2xl md:text-4xl font-black text-amber-700 leading-none">{score}</span>
+           </div>
         </div>
       </div>
 

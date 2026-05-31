@@ -103,7 +103,10 @@ export default function ActivityLayout({
             </AnimatePresence>
             <div className="flex items-center gap-2 md:gap-3 bg-amber-100 px-4 md:px-6 py-2 md:py-4 rounded-full md:rounded-3xl border-2 md:border-4 border-amber-300">
                <Star className="text-amber-500 w-6 h-6 md:w-10 md:h-10 fill-amber-500 shrink-0" />
-               <span className="text-2xl md:text-4xl font-black text-amber-700 leading-none">{score}</span>
+               <div className="flex flex-col items-start leading-none gap-1">
+                  <span className="text-[10px] md:text-[14px] font-black text-amber-600 uppercase tracking-widest hidden sm:block">Score</span>
+                  <span className="text-2xl md:text-4xl font-black text-amber-700 leading-none">{score}</span>
+               </div>
             </div>
           </div>
         </div>
