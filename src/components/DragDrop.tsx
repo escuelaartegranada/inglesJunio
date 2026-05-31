@@ -66,7 +66,7 @@ export default function DragDrop({ onNavigate }: Props) {
       currentLevel={currentIndex + 1}
       totalLevels={gameItems.length}
     >
-      <div className="flex-1 w-full flex flex-col items-center justify-start md:justify-center p-4 max-w-5xl gap-4 md:gap-10 overflow-y-auto">
+      <div className="flex-1 w-full flex flex-col items-center justify-start md:justify-center p-4 max-w-5xl gap-4 md:gap-10">
         
         {/* The Picture and Drop Zone */}
         <div className="bg-white rounded-[32px] md:rounded-[48px] p-4 md:p-8 shadow-xl border-4 border-amber-200 flex flex-col items-center gap-4 md:gap-8 w-full max-w-md shrink-0">

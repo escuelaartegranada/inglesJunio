@@ -200,12 +200,12 @@ export default function Drawing({ onNavigate }: Props) {
     >
       <div className="flex-1 w-full flex flex-col lg:flex-row gap-6 p-4 md:p-8 max-w-[1400px]">
         {/* Tools Palette */}
-        <div className="flex flex-row lg:flex-col w-full lg:w-48 bg-white p-3 lg:p-6 rounded-[24px] lg:rounded-[48px] border-4 border-amber-200 shadow-xl shrink-0 overflow-x-auto lg:overflow-y-auto lg:overflow-x-hidden items-center lg:items-stretch gap-3 lg:gap-0">
+        <div className="flex flex-row lg:flex-col w-full lg:w-48 bg-white p-3 lg:p-6 rounded-[24px] lg:rounded-[48px] border-4 border-amber-200 shadow-xl shrink-0 flex-wrap justify-center items-center gap-3 lg:gap-0">
           
-          <div className="flex flex-row lg:flex-col justify-center items-center gap-2 lg:gap-4 shrink-0">
+          <div className="flex flex-row lg:flex-col justify-center items-center gap-2 lg:gap-4 shrink-0 flex-wrap">
             <button 
               onClick={() => { playSound('click'); setMode('pencil'); speak('Pencil'); }}
-              className={`w-12 h-12 md:w-14 md:h-14 rounded-2xl flex items-center justify-center transition-all bg-white border-4 shrink-0 ${mode === 'pencil' ? 'border-amber-400 -translate-y-1 lg:-translate-y-1' : 'border-slate-100 hover:border-slate-200'}`}
+              className={`w-12 h-12 md:w-14 md:h-14 rounded-2xl flex items-center justify-center transition-all bg-white border-4 shrink-0 ${mode === 'pencil' ? 'border-amber-400 -translate-y-1' : 'border-slate-100 hover:border-slate-200'}`}
             >
               <Pencil size={24} className={mode === 'pencil' ? 'text-amber-500' : 'text-slate-400'} />
             </button>
@@ -247,7 +247,7 @@ export default function Drawing({ onNavigate }: Props) {
             </button>
           </div>
 
-          <div className="w-1 h-12 lg:h-1 lg:w-full bg-amber-100 rounded-full mx-1 lg:mx-0 lg:my-4 shrink-0"></div>
+          <div className="hidden lg:block w-1 max-h-12 lg:h-1 lg:w-full bg-amber-100 rounded-full mx-1 lg:mx-0 lg:my-4 shrink-0"></div>
 
           {/* Line widths */}
           <div className="flex flex-row lg:flex-col gap-2 lg:gap-3 items-center justify-center shrink-0">
@@ -262,10 +262,10 @@ export default function Drawing({ onNavigate }: Props) {
              </button>
           </div>
 
-          <div className="w-1 h-12 lg:h-1 lg:w-full bg-amber-100 rounded-full mx-1 lg:mx-0 lg:my-4 shrink-0"></div>
+          <div className="hidden lg:block w-1 max-h-12 lg:h-1 lg:w-full bg-amber-100 rounded-full mx-1 lg:mx-0 lg:my-4 shrink-0"></div>
 
           {/* Color palette */}
-          <div className="flex flex-row lg:grid lg:grid-cols-2 gap-2 justify-items-center relative shrink-0">
+          <div className="flex flex-row lg:grid lg:grid-cols-2 gap-2 justify-items-center relative shrink-0 flex-wrap">
             {colors.map(c => (
               <button
                 key={c}
@@ -287,7 +287,6 @@ export default function Drawing({ onNavigate }: Props) {
           </div>
 
           <div className="hidden lg:block flex-1 mt-6"></div>
-          <div className="w-1 h-12 lg:hidden bg-amber-100 rounded-full mx-1 shrink-0"></div>
 
           {/* Actions */}
           <div className="flex flex-row lg:flex-col gap-2 lg:gap-4 lg:mt-auto items-center justify-center shrink-0">

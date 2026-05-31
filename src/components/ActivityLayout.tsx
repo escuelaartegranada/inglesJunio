@@ -55,7 +55,7 @@ export default function ActivityLayout({
   };
 
   return (
-    <div className="min-h-[100dvh] flex flex-col bg-amber-50 overscroll-none select-none font-sans overflow-x-hidden overflow-y-auto">
+    <div className="h-[100dvh] flex flex-col bg-amber-50 overscroll-none select-none font-sans overflow-hidden">
       {/* TOP BAR */}
       <header className="min-h-[100px] md:h-40 py-4 flex-shrink-0 bg-white border-b-4 border-amber-200 px-4 md:px-12 flex items-center justify-between shadow-md z-10 w-full rounded-b-[40px] gap-2">
         <div className="flex-1 flex justify-start items-center gap-3 md:gap-6 min-w-0">
@@ -113,8 +113,10 @@ export default function ActivityLayout({
       </header>
 
       {/* MAIN CONTENT AREA */}
-      <main className="flex-1 relative w-full p-4 md:p-12 flex flex-col items-center justify-center z-0">
-        {children}
+      <main className="flex-1 overflow-x-hidden overflow-y-auto relative w-full p-4 md:p-8 z-0 flex flex-col items-center justify-start">
+          <div className="w-full flex-1 flex flex-col items-center md:justify-center min-h-max pointer-events-auto">
+            {children}
+          </div>
       </main>
 
       {/* BOTTOM BAR */}
