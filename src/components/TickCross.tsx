@@ -25,7 +25,7 @@ export default function TickCross({ onNavigate }: Props) {
   const currentItem = gameItems[currentIndex];
 
   useEffect(() => {
-    speak(`Can you ${currentItem.en}?`);
+    speak(['up', 'down', 'left', 'right'].includes(currentItem.en) ? currentItem.en : `Can you ${currentItem.en}?`);
   }, [currentIndex, currentItem.en]);
 
   const handleNext = () => {
@@ -39,7 +39,7 @@ export default function TickCross({ onNavigate }: Props) {
   };
 
   const handleRepeat = () => {
-    speak(`Can you ${currentItem.en}?`);
+    speak(['up', 'down', 'left', 'right'].includes(currentItem.en) ? currentItem.en : `Can you ${currentItem.en}?`);
   };
 
   const handleAnswer = (canDoIt: boolean) => {
@@ -48,10 +48,14 @@ export default function TickCross({ onNavigate }: Props) {
     addScore(5); // points for participation
     setAnswers(prev => ({ ...prev, [currentItem.id]: canDoIt }));
     
-    if (canDoIt) {
-      speak(`I can ${currentItem.en}`);
+    if (['up', 'down', 'left', 'right'].includes(currentItem.en)) {
+       speak(currentItem.en);
     } else {
-      speak(`I can't ${currentItem.en}`);
+      if (canDoIt) {
+        speak(`I can ${currentItem.en}`);
+      } else {
+        speak(`I can't ${currentItem.en}`);
+      }
     }
 
     setTimeout(() => {
@@ -89,9 +93,9 @@ export default function TickCross({ onNavigate }: Props) {
                   {IconComponent && <IconComponent size={64} className="md:w-[96px] md:h-[96px] text-blue-700" strokeWidth={2} />}
                 </div>
                 <span className="text-2xl md:text-[40px] font-black text-blue-900 uppercase tracking-widest text-center px-4 leading-none mb-2 md:mb-4">
-                  I can {currentItem.en}
+                  {['up', 'down', 'left', 'right'].includes(currentItem.en) ? currentItem.en : `I can ${currentItem.en}`}
                 </span>
-                <SpanishReveal text={`(Puedo ${currentItem.es})`} className="text-lg md:text-[28px] font-bold text-amber-600 uppercase italic tracking-widest text-center px-4 leading-none mt-2" />
+                <SpanishReveal text={['up', 'down', 'left', 'right'].includes(currentItem.en) ? `(${currentItem.es})` : `(Puedo ${currentItem.es})`} className="text-lg md:text-[28px] font-bold text-amber-600 uppercase italic tracking-widest text-center px-4 leading-none mt-2" />
               </div>
               
               <div className="flex justify-center gap-4 md:gap-10 w-full mt-4 md:mt-0">
