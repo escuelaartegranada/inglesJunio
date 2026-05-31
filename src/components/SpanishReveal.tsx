@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { Eye, EyeOff } from 'lucide-react';
 import { playSound } from '../utils';
 
@@ -18,13 +18,15 @@ export default function SpanishReveal({ text, className = '' }: Props) {
 
   if (!revealed) {
     return (
-      <button 
+      <div 
         onClick={toggle}
-        className={`inline-flex items-center justify-center gap-2 bg-amber-100 text-amber-500 px-3 py-1 rounded-2xl border-2 border-amber-200 hover:bg-amber-200 transition-colors ${className}`}
+        role="button"
+        tabIndex={0}
+        className={`inline-flex items-center justify-center gap-2 bg-amber-100 text-amber-500 px-3 py-1 rounded-2xl border-2 border-amber-200 hover:bg-amber-200 transition-colors cursor-pointer ${className}`}
         title="Mostrar español"
       >
         <Eye size={20} />
-      </button>
+      </div>
     );
   }
 

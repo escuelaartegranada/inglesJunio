@@ -105,7 +105,7 @@ export default function TickCross({ onNavigate }: Props) {
                     answered === true ? 'outline-dashed outline-4 outline-emerald-300 outline-offset-4 scale-105' : ''
                   }`}
                 >
-                  <Check size={64} className="md:w-[80px] md:h-[80px]" strokeWidth={4} className="text-white" />
+                  <Check size={64} className="md:w-[80px] md:h-[80px] text-white" strokeWidth={4} />
                 </button>
 
                 <button 
@@ -114,7 +114,7 @@ export default function TickCross({ onNavigate }: Props) {
                     answered === false ? 'outline-dashed outline-4 outline-rose-300 outline-offset-4 scale-105' : ''
                   }`}
                 >
-                  <X size={64} className="md:w-[80px] md:h-[80px]" strokeWidth={4} className="text-white" />
+                  <X size={64} className="md:w-[80px] md:h-[80px] text-white" strokeWidth={4} />
                 </button>
               </div>
             </div>

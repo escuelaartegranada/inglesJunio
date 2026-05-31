@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect, useMemo } from 'react';
 import { Screen } from '../types';
 import ActivityLayout from './ActivityLayout';
 import { playSound, speak } from '../utils';
-import { Pencil, Eraser, Trash2, Download, PaintBucket, Circle, Square, Wand2 } from 'lucide-react';
+import { Pencil, Eraser, Trash2, Download, PaintBucket, Circle, Square, Wand2, Type, Save, FolderOpen, X } from 'lucide-react';
 import { VOCABULARY } from '../data';
 import { useScore } from '../ScoreContext';
 import { fillCanvas } from './floodFill';
@@ -16,7 +16,7 @@ export default function Drawing({ onNavigate }: Props) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [level, setLevel] = useState(1);
   const [isDrawing, setIsDrawing] = useState(false);
-  const [mode, setMode] = useState<'pencil' | 'eraser' | 'bucket' | 'circle' | 'square' | 'rainbow'>('pencil');
+  const [mode, setMode] = useState<'pencil' | 'eraser' | 'bucket' | 'circle' | 'square' | 'rainbow' | 'text'>('pencil');
   const [color, setColor] = useState('#3b82f6'); // blue
   const [hasDrawn, setHasDrawn] = useState(false);
   const [startPos, setStartPos] = useState<{x: number, y: number} | null>(null);
@@ -25,6 +25,60 @@ export default function Drawing({ onNavigate }: Props) {
   const { addScore } = useScore();
 
   const [strokeWidth, setStrokeWidth] = useState<'thin' | 'medium' | 'thick'>('medium');
+
+  const [showGallery, setShowGallery] = useState(false);
+  const [savedDrawings, setSavedDrawings] = useState<{id: string, url: string, date: string}[]>([]);
+
+  useEffect(() => {
+    try {
+      const stored = localStorage.getItem('my_drawings');
+      if (stored) {
+        setSavedDrawings(JSON.parse(stored));
+      }
+    } catch(e) {}
+  }, []);
+
+  const handleSaveToMemory = () => {
+    playSound('correct');
+    if (!canvasRef.current) return;
+    const url = canvasRef.current.toDataURL();
+    const newDrawing = {
+      id: Date.now().toString(),
+      url,
+      date: new Date().toLocaleString()
+    };
+    const updated = [newDrawing, ...savedDrawings];
+    setSavedDrawings(updated);
+    localStorage.setItem('my_drawings', JSON.stringify(updated));
+    speak('Saved to gallery');
+  };
+
+  const handleLoadDrawing = (url: string) => {
+    playSound('pop');
+    if(!canvasRef.current) return;
+    const canvas = canvasRef.current;
+    const ctx = canvas.getContext('2d');
+    if(!ctx) return;
+    
+    const img = new Image();
+    img.onload = () => {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+      setHasDrawn(true);
+      setShowGallery(false);
+    };
+    img.src = url;
+  };
+
+  const handleDeleteDrawing = (e: React.MouseEvent, id: string) => {
+    e.stopPropagation();
+    playSound('pop');
+    const updated = savedDrawings.filter(d => d.id !== id);
+    setSavedDrawings(updated);
+    localStorage.setItem('my_drawings', JSON.stringify(updated));
+  };
 
   const gameItems = useMemo(() => {
     return [...VOCABULARY].sort(() => Math.random() - 0.5);
@@ -91,6 +145,17 @@ export default function Drawing({ onNavigate }: Props) {
     const x = clientX - rect.left;
     const y = clientY - rect.top;
 
+    if (mode === 'text') {
+       const text = window.prompt('Type your text here:');
+       if (text) {
+         ctx.font = `bold ${strokeWidth === 'thick' ? 60 : strokeWidth === 'medium' ? 40 : 20}px "Quicksand", sans-serif`;
+         ctx.fillStyle = color;
+         ctx.fillText(text, x, y);
+         setHasDrawn(true);
+       }
+       return;
+    }
+
     if (mode === 'bucket') {
        fillCanvas(ctx, x, y, color);
        setHasDrawn(true);
@@ -118,7 +183,7 @@ export default function Drawing({ onNavigate }: Props) {
   };
 
   const draw = (e: React.MouseEvent | React.TouchEvent, isStart = false) => {
-    if ((!isDrawing && !isStart) || !canvasRef.current || mode === 'bucket') return;
+    if ((!isDrawing && !isStart) || !canvasRef.current || mode === 'bucket' || mode === 'text') return;
     e.preventDefault();
     
     const canvas = canvasRef.current;
@@ -245,6 +310,13 @@ export default function Drawing({ onNavigate }: Props) {
               {mode === 'rainbow' && <div className="absolute inset-0 bg-gradient-to-br from-rose-100 via-fuchsia-100 to-indigo-100 opacity-50" />}
               <Wand2 size={24} className={`relative z-10 ${mode === 'rainbow' ? 'text-rose-500' : 'text-slate-400'}`} />
             </button>
+
+            <button 
+              onClick={() => { playSound('click'); setMode('text'); speak('Text'); }}
+              className={`w-12 h-12 md:w-14 md:h-14 rounded-2xl flex items-center justify-center transition-all bg-white border-4 shrink-0 ${mode === 'text' ? 'border-indigo-400 -translate-y-1' : 'border-slate-100 hover:border-slate-200'}`}
+            >
+              <Type size={24} className={mode === 'text' ? 'text-indigo-500' : 'text-slate-400'} />
+            </button>
           </div>
 
           <div className="hidden lg:block w-1 max-h-12 lg:h-1 lg:w-full bg-amber-100 rounded-full mx-1 lg:mx-0 lg:my-4 shrink-0"></div>
@@ -297,8 +369,23 @@ export default function Drawing({ onNavigate }: Props) {
                <Trash2 size={24} />
              </button>
              <button 
+               onClick={() => setShowGallery(true)}
+               className="w-12 h-12 lg:w-16 lg:h-16 bg-blue-50 text-blue-600 border-2 border-blue-200 rounded-2xl lg:rounded-3xl flex items-center justify-center hover:bg-blue-100 hover:border-blue-300 transition-colors shrink-0"
+               title="Gallery"
+             >
+               <FolderOpen size={24} />
+             </button>
+             <button 
+               onClick={handleSaveToMemory}
+               className="w-12 h-12 lg:w-16 lg:h-16 bg-emerald-50 text-emerald-600 border-2 border-emerald-200 rounded-2xl lg:rounded-3xl flex items-center justify-center hover:bg-emerald-100 hover:border-emerald-300 transition-colors shrink-0"
+               title="Save to Gallery"
+             >
+               <Save size={24} />
+             </button>
+             <button 
                onClick={handleSave}
-               className="flex w-12 h-12 lg:w-16 lg:h-16 bg-emerald-50 text-emerald-600 border-2 border-emerald-200 rounded-2xl lg:rounded-3xl items-center justify-center hover:bg-emerald-100 hover:border-emerald-300 transition-colors shrink-0"
+               className="flex w-12 h-12 lg:w-16 lg:h-16 bg-indigo-50 text-indigo-600 border-2 border-indigo-200 rounded-2xl lg:rounded-3xl items-center justify-center hover:bg-indigo-100 hover:border-indigo-300 transition-colors shrink-0"
+               title="Download"
              >
                <Download size={24} />
              </button>
@@ -322,6 +409,42 @@ export default function Drawing({ onNavigate }: Props) {
           />
         </div>
       </div>
+
+      {showGallery && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm">
+           <div className="bg-white rounded-[32px] w-full max-w-4xl max-h-[80vh] flex flex-col shadow-2xl border-4 border-amber-200 overflow-hidden">
+             <div className="p-6 border-b-4 border-amber-100 flex justify-between items-center bg-amber-50">
+               <h2 className="text-3xl font-black text-amber-900">My Gallery</h2>
+               <button onClick={() => setShowGallery(false)} className="w-12 h-12 bg-white rounded-full flex items-center justify-center text-slate-400 hover:text-rose-500 transition-colors shadow-sm">
+                 <X size={28} strokeWidth={3} />
+               </button>
+             </div>
+             
+             <div className="flex-1 overflow-y-auto p-6 bg-slate-50">
+                {savedDrawings.length === 0 ? (
+                  <div className="flex flex-col items-center justify-center h-full text-slate-400 gap-4 py-12">
+                     <FolderOpen size={64} strokeWidth={1.5} />
+                     <p className="text-xl font-bold">No drawings saved yet</p>
+                  </div>
+                ) : (
+                  <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                    {savedDrawings.map(d => (
+                      <div key={d.id} className="group relative bg-white p-2 rounded-2xl shadow-sm hover:shadow-md transition-all border-2 border-slate-100 hover:border-blue-300 cursor-pointer overflow-hidden" onClick={() => handleLoadDrawing(d.url)}>
+                        <img src={d.url} alt="Saved Drawing" className="w-full aspect-[4/3] object-contain rounded-xl bg-slate-50" />
+                        <div className="mt-2 px-2 pb-1 flex justify-between items-center">
+                          <span className="text-xs font-medium text-slate-500">{d.date.split(',')[0]}</span>
+                          <button onClick={(e) => handleDeleteDrawing(e, d.id)} className="text-slate-300 hover:text-rose-500 transition-colors">
+                            <Trash2 size={16} />
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+             </div>
+           </div>
+        </div>
+      )}
     </ActivityLayout>
   );
 }
