@@ -6,6 +6,7 @@ import { playSound, speak } from '../utils';
 import * as Icons from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { useScore } from '../ScoreContext';
+import SpanishReveal from './SpanishReveal';
 
 interface Props {
   onNavigate: (screen: Screen) => void;
@@ -83,7 +84,7 @@ export default function Lessons({ onNavigate }: Props) {
             
             <div className="text-center mt-4 bg-orange-50 w-full py-10 rounded-[32px] border-2 border-orange-100 flex flex-col items-center justify-center">
               <h1 className="text-4xl md:text-6xl font-black text-blue-900 mb-2 uppercase tracking-widest leading-none text-center px-4 break-words w-full">{currentItem.en}</h1>
-              <p className="text-xl md:text-[28px] text-amber-600 font-bold italic tracking-wider text-center">({currentItem.es})</p>
+              <div className="flex justify-center"><SpanishReveal text={`(${currentItem.es})`} className="text-xl md:text-[28px] text-amber-600 font-bold italic tracking-wider text-center" /></div>
             </div>
           </motion.div>
         </AnimatePresence>

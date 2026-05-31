@@ -7,6 +7,7 @@ import * as Icons from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Check, X } from 'lucide-react';
 import { useScore } from '../ScoreContext';
+import SpanishReveal from './SpanishReveal';
 
 interface Props {
   onNavigate: (screen: Screen) => void;
@@ -93,9 +94,7 @@ export default function TickCross({ onNavigate }: Props) {
                 <span className="text-2xl md:text-[40px] font-black text-blue-900 uppercase tracking-widest text-center px-4 leading-none mb-2 md:mb-4">
                   I can {currentItem.en}
                 </span>
-                <span className="text-lg md:text-[28px] font-bold text-amber-600 uppercase italic tracking-widest text-center px-4 leading-none">
-                  (Puedo {currentItem.es})
-                </span>
+                <SpanishReveal text={`(Puedo ${currentItem.es})`} className="text-lg md:text-[28px] font-bold text-amber-600 uppercase italic tracking-widest text-center px-4 leading-none mt-2" />
               </div>
               
               <div className="flex justify-center gap-4 md:gap-10 w-full mt-4 md:mt-0">

@@ -2,9 +2,10 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Screen } from '../types';
 import ActivityLayout from './ActivityLayout';
 import { playSound, speak } from '../utils';
-import { Pencil, Eraser, Trash2, Download } from 'lucide-react';
+import { Pencil, Eraser, Trash2, Download, PaintBucket, Circle, Square } from 'lucide-react';
 import { VOCABULARY } from '../data';
 import { useScore } from '../ScoreContext';
+import { fillCanvas } from './floodFill';
 
 interface Props {
   onNavigate: (screen: Screen) => void;
@@ -15,9 +16,11 @@ export default function Drawing({ onNavigate }: Props) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [level, setLevel] = useState(1);
   const [isDrawing, setIsDrawing] = useState(false);
-  const [mode, setMode] = useState<'pencil' | 'eraser'>('pencil');
+  const [mode, setMode] = useState<'pencil' | 'eraser' | 'bucket' | 'circle' | 'square'>('pencil');
   const [color, setColor] = useState('#3b82f6'); // blue
   const [hasDrawn, setHasDrawn] = useState(false);
+  const [startPos, setStartPos] = useState<{x: number, y: number} | null>(null);
+  const [snapshot, setSnapshot] = useState<ImageData | null>(null);
   const { addScore } = useScore();
   
   const currentItem = VOCABULARY[level - 1];
@@ -63,21 +66,51 @@ export default function Drawing({ onNavigate }: Props) {
 
   const startDrawing = (e: React.MouseEvent | React.TouchEvent) => {
     e.preventDefault();
+    if (!canvasRef.current) return;
+    const canvas = canvasRef.current;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    let clientX, clientY;
+    if ('touches' in e) {
+      clientX = e.touches[0].clientX;
+      clientY = e.touches[0].clientY;
+    } else {
+      clientX = (e as React.MouseEvent).clientX;
+      clientY = (e as React.MouseEvent).clientY;
+    }
+    const rect = canvas.getBoundingClientRect();
+    const x = clientX - rect.left;
+    const y = clientY - rect.top;
+
+    if (mode === 'bucket') {
+       fillCanvas(ctx, x, y, color);
+       setHasDrawn(true);
+       return;
+    }
+
+    if (mode === 'circle' || mode === 'square') {
+       setSnapshot(ctx.getImageData(0, 0, canvas.width, canvas.height));
+       setStartPos({x, y});
+    }
+
     setIsDrawing(true);
     setHasDrawn(true);
-    draw(e);
+    draw(e, true);
   };
 
   const endDrawing = () => {
     setIsDrawing(false);
+    setStartPos(null);
+    setSnapshot(null);
     if (canvasRef.current) {
        const ctx = canvasRef.current.getContext('2d');
        if (ctx) ctx.beginPath();
     }
   };
 
-  const draw = (e: React.MouseEvent | React.TouchEvent) => {
-    if (!isDrawing || !canvasRef.current) return;
+  const draw = (e: React.MouseEvent | React.TouchEvent, isStart = false) => {
+    if ((!isDrawing && !isStart) || !canvasRef.current || mode === 'bucket') return;
     e.preventDefault();
     
     const canvas = canvasRef.current;
@@ -96,6 +129,22 @@ export default function Drawing({ onNavigate }: Props) {
     const rect = canvas.getBoundingClientRect();
     const x = clientX - rect.left;
     const y = clientY - rect.top;
+
+    if (mode === 'circle' || mode === 'square') {
+        if (!startPos || !snapshot) return;
+        ctx.putImageData(snapshot, 0, 0);
+        ctx.lineWidth = 6;
+        ctx.strokeStyle = color;
+        ctx.beginPath();
+        if (mode === 'square') {
+           ctx.rect(startPos.x, startPos.y, x - startPos.x, y - startPos.y);
+        } else if (mode === 'circle') {
+           const radius = Math.sqrt(Math.pow(x - startPos.x, 2) + Math.pow(y - startPos.y, 2));
+           ctx.arc(startPos.x, startPos.y, radius, 0, 2 * Math.PI);
+        }
+        ctx.stroke();
+        return;
+    }
 
     ctx.lineWidth = mode === 'eraser' ? 40 : 12;
     ctx.strokeStyle = mode === 'eraser' ? '#ffffff' : color;
@@ -139,27 +188,48 @@ export default function Drawing({ onNavigate }: Props) {
           
           <button 
             onClick={() => { playSound('click'); setMode('pencil'); speak('Pencil'); }}
-            className={`w-16 h-16 md:w-20 md:h-20 rounded-3xl flex items-center justify-center transition-all bg-white border-8 ${mode === 'pencil' ? 'border-amber-400 -translate-y-1' : 'border-slate-100 hover:border-slate-200'}`}
+            className={`w-14 h-14 md:w-16 md:h-16 rounded-3xl flex items-center justify-center transition-all bg-white border-4 ${mode === 'pencil' ? 'border-amber-400 -translate-y-1' : 'border-slate-100 hover:border-slate-200'}`}
           >
-            <Pencil size={36} className={mode === 'pencil' ? 'text-amber-500' : 'text-slate-400'} />
+            <Pencil size={24} className={mode === 'pencil' ? 'text-amber-500' : 'text-slate-400'} />
           </button>
           
           <button 
             onClick={() => { playSound('click'); setMode('eraser'); speak('Eraser'); }}
-            className={`w-16 h-16 md:w-20 md:h-20 rounded-3xl flex items-center justify-center transition-all bg-white border-8 ${mode === 'eraser' ? 'border-pink-400 -translate-y-1' : 'border-slate-100 hover:border-slate-200'}`}
+            className={`w-14 h-14 md:w-16 md:h-16 rounded-3xl flex items-center justify-center transition-all bg-white border-4 ${mode === 'eraser' ? 'border-pink-400 -translate-y-1' : 'border-slate-100 hover:border-slate-200'}`}
           >
-            <Eraser size={36} className={mode === 'eraser' ? 'text-pink-500' : 'text-slate-400'} />
+            <Eraser size={24} className={mode === 'eraser' ? 'text-pink-500' : 'text-slate-400'} />
           </button>
 
-          <div className="h-1 md:h-2 w-full bg-amber-100 rounded-full my-2"></div>
+          <button 
+            onClick={() => { playSound('click'); setMode('bucket'); speak('Fill'); }}
+            className={`w-14 h-14 md:w-16 md:h-16 rounded-3xl flex items-center justify-center transition-all bg-white border-4 ${mode === 'bucket' ? 'border-blue-400 -translate-y-1' : 'border-slate-100 hover:border-slate-200'}`}
+          >
+            <PaintBucket size={24} className={mode === 'bucket' ? 'text-blue-500' : 'text-slate-400'} />
+          </button>
+
+          <button 
+            onClick={() => { playSound('click'); setMode('square'); speak('Square'); }}
+            className={`w-14 h-14 md:w-16 md:h-16 rounded-3xl flex items-center justify-center transition-all bg-white border-4 ${mode === 'square' ? 'border-emerald-400 -translate-y-1' : 'border-slate-100 hover:border-slate-200'}`}
+          >
+            <Square size={24} className={mode === 'square' ? 'text-emerald-500' : 'text-slate-400'} />
+          </button>
+
+          <button 
+            onClick={() => { playSound('click'); setMode('circle'); speak('Circle'); }}
+            className={`w-14 h-14 md:w-16 md:h-16 rounded-3xl flex items-center justify-center transition-all bg-white border-4 ${mode === 'circle' ? 'border-purple-400 -translate-y-1' : 'border-slate-100 hover:border-slate-200'}`}
+          >
+            <Circle size={24} className={mode === 'circle' ? 'text-purple-500' : 'text-slate-400'} />
+          </button>
+
+          <div className="h-1 md:h-2 w-full bg-amber-100 rounded-full my-1"></div>
 
           {/* Color palette */}
           <div className="flex md:flex-col gap-4 items-center mt-2">
             {colors.map(c => (
               <button
                 key={c}
-                onClick={() => { playSound('click'); setColor(c); setMode('pencil'); }}
-                className={`w-12 h-12 md:w-16 md:h-16 rounded-[24px] border-b-8 transition-all ${color === c && mode === 'pencil' ? 'scale-110 border-transparent shadow-lg -translate-y-1' : 'border-black/20 hover:-translate-y-1 shadow-sm'}`}
+                onClick={() => { playSound('click'); setColor(c); if(mode==='eraser') setMode('pencil'); }}
+                className={`w-10 h-10 md:w-14 md:h-14 rounded-full border-b-4 transition-all ${color === c && mode !== 'eraser' ? 'scale-110 border-transparent shadow-lg -translate-y-1' : 'border-black/20 hover:-translate-y-1 shadow-sm'}`}
                 style={{ backgroundColor: c }}
               />
             ))}

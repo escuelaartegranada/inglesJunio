@@ -4,6 +4,7 @@ import ActivityLayout from './ActivityLayout';
 import { playSound, speak } from '../utils';
 import { VOCABULARY } from '../data';
 import { useScore } from '../ScoreContext';
+import SpanishReveal from './SpanishReveal';
 
 interface Props {
   onNavigate: (screen: Screen) => void;
@@ -181,7 +182,7 @@ export default function WordSearch({ onNavigate }: Props) {
             className="hidden md:flex flex-col items-center justify-center mb-4 py-4 px-8 bg-blue-500 text-white rounded-3xl border-b-8 border-blue-700 active:translate-y-1 hover:border-b-4 hover:translate-y-1 transition-all shadow-lg"
           >
             <span className="font-black text-2xl leading-none">HELP</span>
-            <span className="font-bold text-sm text-blue-200 mt-1 uppercase tracking-wider">(ayuda)</span>
+            <div className="mt-1"><SpanishReveal text="(Ayuda)" className="text-sm !text-blue-200 mt-1 uppercase tracking-wider" /></div>
           </button>
           
           {words.map(w => (
@@ -192,9 +193,7 @@ export default function WordSearch({ onNavigate }: Props) {
               <span className={`text-4xl md:text-5xl font-black uppercase tracking-widest ${foundWords.includes(w.en) ? 'text-emerald-500 line-through' : 'text-blue-900'}`}>
                 {w.en}
               </span>
-              <span className="text-xl md:text-2xl font-bold text-amber-600 italic">
-                 ({w.es})
-              </span>
+              <SpanishReveal text={`(${w.es})`} className="text-xl md:text-2xl font-bold text-amber-600 italic" />
             </div>
           ))}
         </div>
@@ -215,7 +214,7 @@ export default function WordSearch({ onNavigate }: Props) {
             <div className="absolute inset-0 bg-white/90 rounded-[48px] z-20 flex items-center justify-center pointer-events-none backdrop-blur-sm">
               <div className="flex flex-col items-center text-emerald-500 -rotate-12 drop-shadow-lg">
                 <span className="text-6xl md:text-8xl font-black uppercase tracking-tight">WELL DONE!</span>
-                <span className="text-3xl md:text-4xl font-bold tracking-tight text-emerald-600 mt-2">(¡BIEN HECHO!)</span>
+                <div className="mt-2"><SpanishReveal text="(¡BIEN HECHO!)" className="text-3xl md:text-4xl font-bold tracking-tight text-emerald-600" /></div>
               </div>
             </div>
           )}

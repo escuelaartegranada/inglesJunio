@@ -12,6 +12,7 @@ import {
   Maximize
 } from 'lucide-react';
 import { useScore } from '../ScoreContext';
+import SpanishReveal from './SpanishReveal';
 
 interface HomeProps {
   onNavigate: (screen: Screen) => void;
@@ -58,7 +59,7 @@ export default function Home({ onNavigate }: HomeProps) {
         </div>
       </div>
 
-      <div className="text-center mb-8 flex-1 flex flex-col justify-center items-center mt-[-20px] md:mt-0">
+      <div className="text-center mb-8 flex flex-col justify-center items-center mt-4">
         <h1 className="text-4xl sm:text-5xl md:text-7xl font-black text-blue-900 mb-2 drop-shadow-sm flex items-center justify-center gap-3 md:gap-6 uppercase tracking-tight flex-wrap w-full">
           <span>English Playbook</span>
           <button 
@@ -68,8 +69,8 @@ export default function Home({ onNavigate }: HomeProps) {
             <Volume2 size={24} className="md:w-10 md:h-10" />
           </button>
         </h1>
-        <h2 className="text-xl sm:text-2xl md:text-3xl text-blue-500 font-bold mb-4 md:mb-6 tracking-wide uppercase px-4">(Juegos en Inglés)</h2>
-        <p className="text-xl sm:text-2xl md:text-3xl text-amber-600 font-bold italic px-4">¡Elige un juego! (Choose a game)</p>
+        <h2 className="text-xl sm:text-2xl md:text-3xl text-blue-500 font-bold mb-4 md:mb-6 tracking-wide uppercase px-4 justify-center flex"><SpanishReveal text="(Juegos en Inglés)" /></h2>
+        <div className="flex justify-center"><SpanishReveal text="¡Elige un juego! (Choose a game)" className="text-xl sm:text-2xl md:text-3xl text-amber-600 font-bold italic px-4" /></div>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-10 max-w-5xl w-full pb-12">

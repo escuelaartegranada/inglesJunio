@@ -4,8 +4,9 @@ import ActivityLayout from './ActivityLayout';
 import { VOCABULARY } from '../data';
 import { playSound, speak } from '../utils';
 import * as Icons from 'lucide-react';
-import { motion, useAnimation, useDragControls } from 'motion/react';
+import { motion, useAnimation } from 'motion/react';
 import { useScore } from '../ScoreContext';
+import SpanishReveal from './SpanishReveal';
 
 interface Props {
   onNavigate: (screen: Screen) => void;
@@ -57,9 +58,10 @@ export default function DragDrop({ onNavigate }: Props) {
   const IconComponent = (Icons as any)[currentItem.icon] || Icons.Star;
 
   return (
-    <ActivityLayout 
+      <ActivityLayout 
       title="Stickers" 
       instructionText="Drag the word"
+      instructionEs="Arrastra la palabra hacia la imagen"
       onNavigate={onNavigate}
       onRepeatAudio={handleRepeat}
       onNext={handleNext}
@@ -158,7 +160,6 @@ function DraggableSticker({ word, spanish, correctWord, dropZoneRef, onSuccess }
       className="bg-white px-6 py-4 md:px-8 md:py-6 rounded-3xl shadow-xl border-4 border-amber-200 cursor-grab touch-none select-none border-b-8 active:border-b-4 hover:-translate-y-1 active:translate-y-1 transition-all flex flex-col items-center justify-center min-w-[140px]"
     >
       <span className="text-2xl md:text-3xl font-black uppercase text-blue-900 tracking-widest">{word}</span>
-      <span className="text-sm md:text-lg font-bold italic text-amber-600">({spanish})</span>
     </motion.div>
   );
 }
