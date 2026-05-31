@@ -198,11 +198,11 @@ export default function Drawing({ onNavigate }: Props) {
       totalLevels={100}
       onNext={level < 100 ? handleNext : undefined}
     >
-      <div className="flex-1 w-full flex flex-col lg:flex-row gap-6 p-4 md:p-8 max-w-[1400px]">
+      <div className="flex-1 w-full flex flex-col lg:flex-row gap-4 lg:gap-6 p-2 lg:p-4 max-w-[1400px] overflow-hidden">
         {/* Tools Palette */}
-        <div className="flex flex-row lg:flex-col w-full lg:w-48 bg-white p-3 lg:p-6 rounded-[24px] lg:rounded-[48px] border-4 border-amber-200 shadow-xl shrink-0 flex-wrap justify-center items-center gap-3 lg:gap-0">
+        <div className="flex flex-row lg:flex-col w-full lg:w-48 bg-white p-3 lg:p-6 rounded-[24px] lg:rounded-[48px] border-4 border-amber-200 shadow-xl shrink-0 overflow-x-auto lg:overflow-y-auto items-center lg:items-stretch gap-3 lg:gap-0 scrollbar-hide">
           
-          <div className="flex flex-row lg:flex-col justify-center items-center gap-2 lg:gap-4 shrink-0 flex-wrap">
+          <div className="flex flex-row lg:flex-col justify-center items-center gap-2 lg:gap-4 shrink-0">
             <button 
               onClick={() => { playSound('click'); setMode('pencil'); speak('Pencil'); }}
               className={`w-12 h-12 md:w-14 md:h-14 rounded-2xl flex items-center justify-center transition-all bg-white border-4 shrink-0 ${mode === 'pencil' ? 'border-amber-400 -translate-y-1' : 'border-slate-100 hover:border-slate-200'}`}
@@ -265,7 +265,7 @@ export default function Drawing({ onNavigate }: Props) {
           <div className="hidden lg:block w-1 max-h-12 lg:h-1 lg:w-full bg-amber-100 rounded-full mx-1 lg:mx-0 lg:my-4 shrink-0"></div>
 
           {/* Color palette */}
-          <div className="flex flex-row lg:grid lg:grid-cols-2 gap-2 justify-items-center relative shrink-0 flex-wrap">
+          <div className="flex flex-row lg:grid lg:grid-cols-2 gap-2 justify-items-center relative shrink-0">
             {colors.map(c => (
               <button
                 key={c}
