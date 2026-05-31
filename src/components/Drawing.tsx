@@ -298,7 +298,7 @@ export default function Drawing({ onNavigate }: Props) {
              </button>
              <button 
                onClick={handleSave}
-               className="hidden md:flex w-16 h-16 md:w-20 md:h-20 bg-emerald-50 text-emerald-600 border-2 border-emerald-200 rounded-3xl items-center justify-center hover:bg-emerald-100 hover:border-emerald-300 transition-colors"
+               className="flex w-16 h-16 md:w-20 md:h-20 bg-emerald-50 text-emerald-600 border-2 border-emerald-200 rounded-3xl items-center justify-center hover:bg-emerald-100 hover:border-emerald-300 transition-colors"
              >
                <Download size={32} />
              </button>
