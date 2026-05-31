@@ -1,0 +1,8 @@
+{
+  "name": "English Playbook",
+  "description": "Tablet-optimized English learning app for kids with interactive exercises like drag and drop, tick/cross, coloring, and word search.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
