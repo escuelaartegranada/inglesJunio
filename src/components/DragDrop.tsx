@@ -155,10 +155,10 @@ function DraggableSticker({ word, spanish, correctWord, dropZoneRef, onSuccess }
       onDragStart={() => { playSound('pop'); speak(word); }}
       onDragEnd={handleDragEnd}
       whileDrag={{ scale: 1.1, rotate: 2, zIndex: 50, cursor: 'grabbing' }}
-      className="bg-white px-8 py-6 rounded-3xl shadow-xl border-4 border-amber-200 cursor-grab touch-none select-none border-b-8 active:border-b-4 hover:-translate-y-1 active:translate-y-1 transition-all flex flex-col items-center justify-center"
+      className="bg-white px-6 py-4 md:px-8 md:py-6 rounded-3xl shadow-xl border-4 border-amber-200 cursor-grab touch-none select-none border-b-8 active:border-b-4 hover:-translate-y-1 active:translate-y-1 transition-all flex flex-col items-center justify-center min-w-[140px]"
     >
-      <span className="text-4xl font-black uppercase text-blue-900 tracking-widest">{word}</span>
-      <span className="text-xl font-bold italic text-amber-600">({spanish})</span>
+      <span className="text-2xl md:text-3xl font-black uppercase text-blue-900 tracking-widest">{word}</span>
+      <span className="text-sm md:text-lg font-bold italic text-amber-600">({spanish})</span>
     </motion.div>
   );
 }

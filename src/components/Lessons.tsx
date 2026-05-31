@@ -75,15 +75,15 @@ export default function Lessons({ onNavigate }: Props) {
               speak(currentItem.en);
             }}
           >
-            <div className="bg-blue-50 w-full py-16 rounded-[32px] flex flex-col items-center border-2 border-blue-100">
-              <div className="w-56 h-56 bg-blue-200 rounded-full flex items-center justify-center shadow-inner">
-                {IconComponent && <IconComponent size={120} className="text-blue-700" strokeWidth={2} />}
+              <div className="bg-blue-50 w-full py-12 md:py-16 rounded-[32px] flex flex-col items-center border-2 border-blue-100">
+              <div className="w-40 h-40 md:w-56 md:h-56 bg-blue-200 rounded-full flex items-center justify-center shadow-inner">
+                {IconComponent && <IconComponent size={80} className="md:w-[120px] md:h-[120px] text-blue-700" strokeWidth={2} />}
               </div>
             </div>
             
-            <div className="text-center mt-4 bg-orange-50 w-full py-8 rounded-[32px] border-2 border-orange-100">
-              <h1 className="text-6xl font-black text-blue-900 mb-4 uppercase tracking-widest leading-none">{currentItem.en}</h1>
-              <p className="text-[28px] text-amber-600 font-bold italic">{currentItem.es}</p>
+            <div className="text-center mt-4 bg-orange-50 w-full py-10 rounded-[32px] border-2 border-orange-100 flex flex-col items-center justify-center">
+              <h1 className="text-4xl md:text-6xl font-black text-blue-900 mb-2 uppercase tracking-widest leading-none text-center px-4 break-words w-full">{currentItem.en}</h1>
+              <p className="text-xl md:text-[28px] text-amber-600 font-bold italic tracking-wider text-center">({currentItem.es})</p>
             </div>
           </motion.div>
         </AnimatePresence>

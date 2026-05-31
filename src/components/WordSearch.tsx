@@ -172,10 +172,10 @@ export default function WordSearch({ onNavigate }: Props) {
       currentLevel={level}
       totalLevels={100}
     >
-      <div className="flex-1 w-full flex flex-col md:flex-row items-center justify-center p-8 gap-12">
+      <div className="flex-1 w-full flex flex-col lg:flex-row items-center justify-center p-4 md:p-8 gap-8 md:gap-12">
         
         {/* Word List */}
-        <div className="flex md:flex-col gap-6 bg-white p-8 rounded-[40px] border-4 border-amber-200 shadow-xl shrink-0">
+        <div className="flex flex-row lg:flex-col gap-4 lg:gap-6 bg-white p-4 md:p-8 rounded-[40px] border-4 border-amber-200 shadow-xl shrink-0 flex-wrap justify-center items-center w-full lg:w-auto">
           <button 
             onClick={() => { playSound('pop'); speak('Help! Find these words.'); }}
             className="hidden md:flex flex-col items-center justify-center mb-4 py-4 px-8 bg-blue-500 text-white rounded-3xl border-b-8 border-blue-700 active:translate-y-1 hover:border-b-4 hover:translate-y-1 transition-all shadow-lg"

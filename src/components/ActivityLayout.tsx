@@ -54,48 +54,62 @@ export default function ActivityLayout({
   };
 
   return (
-    <div className="min-h-[100dvh] flex flex-col bg-amber-50 overscroll-none overflow-hidden touch-none select-none font-sans">
+    <div className="min-h-[100dvh] flex flex-col bg-amber-50 overscroll-none select-none font-sans overflow-x-hidden overflow-y-auto">
       {/* TOP BAR */}
-      <header className="h-40 flex-shrink-0 bg-white border-b-4 border-amber-200 px-6 md:px-12 flex items-center justify-between shadow-md z-10 w-full rounded-b-[40px]">
-        <div className="flex-1 flex justify-start items-center gap-4 md:gap-6">
+      <header className="min-h-[100px] md:h-40 py-4 flex-shrink-0 bg-white border-b-4 border-amber-200 px-4 md:px-12 flex items-center justify-between shadow-md z-10 w-full rounded-b-[40px] gap-2">
+        <div className="flex-1 flex justify-start items-center gap-3 md:gap-6 min-w-0">
           <button 
             onClick={wrapAudio}
-            className="w-16 h-16 md:w-24 md:h-24 bg-blue-500 text-white rounded-full flex items-center justify-center shadow-lg active:translate-y-1 active:shadow-md transition-all shrink-0"
+            className="w-12 h-12 md:w-24 md:h-24 bg-blue-500 text-white rounded-full flex items-center justify-center shadow-lg active:translate-y-1 active:shadow-md transition-all shrink-0"
           >
-            <Volume2 className="w-8 h-8 md:w-12 md:h-12" />
+            <Volume2 className="w-6 h-6 md:w-12 md:h-12" />
           </button>
-          <div className="flex flex-col">
-            <h2 className="text-2xl md:text-[40px] font-black text-blue-900 leading-tight tracking-tight">
+          <div className="flex flex-col min-w-0">
+            <h2 className="text-lg sm:text-2xl md:text-[40px] font-black text-blue-900 leading-tight tracking-tight break-words">
               {instructionText}
             </h2>
-            <p className="text-xl md:text-[24px] font-medium text-amber-600 italic leading-tight mt-1">{instructionEs || title}</p>
+            <p className="text-sm sm:text-xl md:text-[24px] font-medium text-amber-600 italic leading-tight mt-1 truncate">{instructionEs || title}</p>
           </div>
         </div>
 
-        <div className="flex-1 flex justify-end">
-          <div className="flex items-center gap-4 relative">
+        <div className="shrink-0 flex justify-end">
+          <div className="flex items-center gap-2 md:gap-4 relative">
+            <button
+              onClick={() => {
+                playSound('click');
+                if (!document.fullscreenElement) {
+                  document.documentElement.requestFullscreen().catch(e => console.error(e));
+                } else {
+                  document.exitFullscreen().catch(e => console.error(e));
+                }
+              }}
+              className="bg-slate-100 p-4 rounded-3xl border-4 border-slate-200 text-slate-500 hover:bg-slate-200 transition-all hidden md:flex items-center justify-center shrink-0"
+              title="Pantalla Completa"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-maximize"><path d="M8 3H5a2 2 0 0 0-2 2v3"/><path d="M21 8V5a2 2 0 0 0-2-2h-3"/><path d="M3 16v3a2 2 0 0 0 2 2h3"/><path d="M16 21h3a2 2 0 0 0 2-2v-3"/></svg>
+            </button>
             <AnimatePresence>
               {showScorePopup && (
                 <motion.div 
                   initial={{ opacity: 0, y: 20, scale: 0.5 }}
                   animate={{ opacity: 1, y: -40, scale: 1.2 }}
                   exit={{ opacity: 0, y: -80, scale: 1.5 }}
-                  className="absolute left-1/2 -ml-8 bottom-full text-5xl font-black text-emerald-500 drop-shadow-md z-50 pointer-events-none"
+                  className="absolute left-1/2 -ml-8 bottom-full text-3xl md:text-5xl font-black text-emerald-500 drop-shadow-md z-50 pointer-events-none"
                 >
                   +10
                 </motion.div>
               )}
             </AnimatePresence>
-            <div className="flex items-center gap-3 bg-amber-100 px-6 py-4 rounded-3xl border-4 border-amber-300">
-               <Star className="text-amber-500 w-10 h-10 fill-amber-500" />
-               <span className="text-4xl font-black text-amber-700">{score}</span>
+            <div className="flex items-center gap-2 md:gap-3 bg-amber-100 px-4 md:px-6 py-2 md:py-4 rounded-full md:rounded-3xl border-2 md:border-4 border-amber-300">
+               <Star className="text-amber-500 w-6 h-6 md:w-10 md:h-10 fill-amber-500 shrink-0" />
+               <span className="text-2xl md:text-4xl font-black text-amber-700 leading-none">{score}</span>
             </div>
           </div>
         </div>
       </header>
 
       {/* MAIN CONTENT AREA */}
-      <main className="flex-1 relative w-full h-full p-4 md:p-12 flex flex-col items-center justify-center overflow-auto z-0">
+      <main className="flex-1 relative w-full p-4 md:p-12 flex flex-col items-center justify-center z-0">
         {children}
       </main>
 
@@ -104,10 +118,10 @@ export default function ActivityLayout({
         <div className="flex-1 flex justify-start">
           <button 
              onClick={handleHome}
-             className="h-16 md:h-20 px-6 md:px-8 bg-amber-400 rounded-3xl flex items-center gap-3 md:gap-4 shadow-md active:translate-y-1 text-white border-b-8 border-amber-500 hover:border-b-4 hover:translate-y-1 transition-all"
+             className="h-14 md:h-20 px-4 md:px-8 bg-amber-400 rounded-2xl md:rounded-3xl flex items-center gap-2 md:gap-4 shadow-md active:translate-y-1 text-white border-b-4 md:border-b-8 border-amber-500 hover:translate-y-1 transition-all"
           >
-             <Home size={32} strokeWidth={3} />
-             <span className="text-xl md:text-2xl font-black uppercase hidden sm:flex flex-col items-start leading-none group-hover:scale-105 transition-transform"><span className="tracking-wide">Home</span><span className="text-[12px] md:text-[14px] text-amber-200 normal-case tracking-normal">Inicio</span></span>
+             <Home size={24} className="md:w-8 md:h-8" strokeWidth={3} />
+             <span className="text-lg md:text-2xl font-black uppercase hidden lg:flex flex-col items-start leading-none group-hover:scale-105 transition-transform"><span className="tracking-wide">Home</span><span className="text-[10px] md:text-[14px] text-amber-200 normal-case tracking-normal">Inicio</span></span>
           </button>
         </div>
         
@@ -115,15 +129,15 @@ export default function ActivityLayout({
            {onPrev && (
              <button 
                onClick={() => { playSound('click'); onPrev(); }}
-               className="h-16 md:h-20 px-4 md:px-8 bg-slate-100 rounded-3xl flex items-center gap-2 md:gap-4 shadow-md active:translate-y-1 text-slate-500 border-b-8 border-slate-200 hover:border-b-4 hover:translate-y-1 transition-all"
+               className="h-14 md:h-20 px-4 md:px-8 bg-slate-100 rounded-2xl md:rounded-3xl flex items-center gap-2 md:gap-4 shadow-md active:translate-y-1 text-slate-500 border-b-4 md:border-b-8 border-slate-200 hover:translate-y-1 transition-all"
              >
-               <ArrowLeft size={32} strokeWidth={3} />
-               <span className="text-xl md:text-2xl font-black uppercase hidden lg:flex flex-col items-start leading-none"><span className="tracking-wide">Back</span><span className="text-[12px] md:text-[14px] text-slate-400 normal-case tracking-normal">Volver</span></span>
+               <ArrowLeft size={24} className="md:w-8 md:h-8" strokeWidth={3} />
+               <span className="text-lg md:text-2xl font-black uppercase hidden lg:flex flex-col items-start leading-none"><span className="tracking-wide">Back</span><span className="text-[10px] md:text-[14px] text-slate-400 normal-case tracking-normal">Volver</span></span>
              </button>
            )}
            {currentLevel !== undefined && totalLevels !== undefined && (
-             <div className="bg-amber-100 px-6 sm:px-10 py-3 rounded-full border-2 border-amber-200 hidden md:block mx-4">
-               <span className="text-xl sm:text-[24px] font-black text-amber-700 uppercase tracking-widest">{currentLevel} / {totalLevels}</span>
+             <div className="bg-amber-100 px-4 sm:px-10 py-2 sm:py-3 rounded-full border-2 border-amber-200 hidden sm:block mx-2 sm:mx-4 shrink-0">
+               <span className="text-lg sm:text-[24px] font-black text-amber-700 uppercase tracking-widest leading-none">{currentLevel} / {totalLevels}</span>
              </div>
            )}
         </div>
@@ -132,10 +146,10 @@ export default function ActivityLayout({
           {onNext ? (
             <button 
               onClick={() => { playSound('click'); onNext(); }}
-              className="h-16 md:h-20 px-6 md:px-10 bg-indigo-600 rounded-3xl flex items-center gap-3 md:gap-4 shadow-lg active:translate-y-1 transition-all border-b-8 border-indigo-800 text-white hover:border-b-4 hover:translate-y-1"
+              className="h-14 md:h-20 px-4 md:px-10 bg-indigo-600 rounded-2xl md:rounded-3xl flex items-center gap-2 md:gap-4 shadow-lg active:translate-y-1 transition-all border-b-4 md:border-b-8 border-indigo-800 text-white hover:translate-y-1"
             >
-              <span className="text-xl md:text-2xl font-black uppercase hidden sm:flex flex-col items-start leading-none group-hover:scale-105 transition-transform"><span className="tracking-wide">Next</span><span className="text-[12px] md:text-[14px] text-indigo-300 normal-case tracking-normal">Siguiente</span></span>
-              <ArrowRight size={32} strokeWidth={3} />
+              <span className="text-lg md:text-2xl font-black uppercase hidden lg:flex flex-col items-start leading-none group-hover:scale-105 transition-transform"><span className="tracking-wide">Next</span><span className="text-[10px] md:text-[14px] text-indigo-300 normal-case tracking-normal">Siguiente</span></span>
+              <ArrowRight size={24} className="md:w-8 md:h-8" strokeWidth={3} />
             </button>
           ) : (
             <div className="w-[120px] md:w-[160px]"></div>

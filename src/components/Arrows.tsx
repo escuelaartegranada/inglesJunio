@@ -85,10 +85,10 @@ export default function Arrows({ onNavigate }: Props) {
       currentLevel={level}
       totalLevels={100}
     >
-      <div className="flex-1 w-full flex flex-col md:flex-row items-center justify-between p-8 gap-12">
+      <div className="flex-1 w-full flex flex-col lg:flex-row items-center justify-between p-4 md:p-8 gap-8 md:gap-12">
         
         {/* Play Area */}
-        <div className="flex-1 bg-white rounded-[48px] p-6 shadow-xl border-4 border-amber-200 h-[60vh] w-full flex items-center justify-center relative overflow-hidden">
+        <div className="flex-1 bg-white rounded-[48px] p-4 shadow-xl border-4 border-amber-200 min-h-[40vh] md:h-[60vh] w-full flex items-center justify-center relative overflow-hidden shrink-0">
           {/* Grid background effect */}
           <div className="absolute inset-0 opacity-20 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-blue-300 to-transparent bg-[length:40px_40px]"></div>
           

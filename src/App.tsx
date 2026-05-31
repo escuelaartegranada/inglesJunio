@@ -24,7 +24,7 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-amber-50 text-slate-900 font-sans selection:bg-blue-200 overflow-hidden touch-none select-none">
+    <div className="min-h-screen bg-amber-50 text-slate-900 font-sans selection:bg-blue-200 select-none overflow-x-hidden">
       {/* Orientation Hint Overlay */}
       {showOrientationHint && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-blue-500/90 text-white p-6 transition-opacity duration-1000"

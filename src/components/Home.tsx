@@ -8,7 +8,8 @@ import {
   Type, 
   Palette,
   Volume2,
-  Star
+  Star,
+  Maximize
 } from 'lucide-react';
 import { useScore } from '../ScoreContext';
 
@@ -34,31 +35,44 @@ export default function Home({ onNavigate }: HomeProps) {
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center p-8 bg-amber-50">
-      <div className="absolute top-8 left-8">
-        {/* Simple title for parents, invisible to kids mostly or just welcoming */}
-      </div>
+    <div className="min-h-screen flex flex-col items-center p-4 md:p-8 bg-amber-50 overflow-y-auto overflow-x-hidden">
+      <div className="w-full flex justify-between items-start mb-8 z-10 gap-2">
+        <button
+          onClick={() => {
+            playSound('click');
+            if (!document.fullscreenElement) {
+              document.documentElement.requestFullscreen().catch(e => console.error(e));
+            } else {
+              document.exitFullscreen().catch(e => console.error(e));
+            }
+          }}
+          className="bg-white px-3 py-2 md:px-4 md:py-2 rounded-2xl md:rounded-3xl border-4 border-amber-200 shadow-lg text-amber-600 hover:bg-amber-50 active:translate-y-1 transition-all flex flex-col items-center shrink-0"
+        >
+          <Maximize size={24} className="md:w-8 md:h-8 mb-1" />
+          <span className="text-[10px] md:text-xs font-black uppercase leading-none text-center">Pantalla<br/>Completa</span>
+        </button>
       
-      <div className="absolute top-8 right-8 flex items-center gap-3 bg-white px-6 py-4 rounded-3xl border-4 border-amber-200 shadow-lg">
-         <Star className="text-amber-500 w-10 h-10 fill-amber-500" />
-         <span className="text-4xl font-black text-amber-700">{score}</span>
+        <div className="flex items-center gap-2 md:gap-3 bg-white px-4 py-2 md:px-6 md:py-4 rounded-full md:rounded-3xl border-2 md:border-4 border-amber-200 shadow-lg shrink-0">
+           <Star className="text-amber-500 w-6 h-6 md:w-10 md:h-10 fill-amber-500" />
+           <span className="text-2xl md:text-4xl font-black text-amber-700 leading-none">{score}</span>
+        </div>
       </div>
 
-      <div className="text-center mb-16">
-        <h1 className="text-5xl md:text-7xl font-black text-blue-900 mb-2 drop-shadow-sm flex items-center justify-center gap-6 uppercase tracking-tight">
-          English Playbook
+      <div className="text-center mb-8 flex-1 flex flex-col justify-center items-center mt-[-20px] md:mt-0">
+        <h1 className="text-4xl sm:text-5xl md:text-7xl font-black text-blue-900 mb-2 drop-shadow-sm flex items-center justify-center gap-3 md:gap-6 uppercase tracking-tight flex-wrap w-full">
+          <span>English Playbook</span>
           <button 
             onClick={() => { playSound('click'); speak('English Playbook. Choose a game!'); }}
-            className="w-20 h-20 bg-blue-500 text-white rounded-full flex items-center justify-center shadow-lg active:translate-y-1 active:shadow-md transition-all border-b-8 border-blue-700 hover:border-b-4 hover:translate-y-1"
+            className="w-12 h-12 md:w-20 md:h-20 bg-blue-500 text-white rounded-full flex items-center justify-center shadow-lg active:translate-y-1 active:shadow-md transition-all border-b-4 md:border-b-8 border-blue-700 hover:border-b-2 md:hover:border-b-4 hover:translate-y-1 shrink-0"
           >
-            <Volume2 size={40} />
+            <Volume2 size={24} className="md:w-10 md:h-10" />
           </button>
         </h1>
-        <h2 className="text-3xl text-blue-500 font-bold mb-6 tracking-wide uppercase">(Juegos en Inglés)</h2>
-        <p className="text-3xl text-amber-600 font-bold italic">¡Elige un juego! (Choose a game)</p>
+        <h2 className="text-xl sm:text-2xl md:text-3xl text-blue-500 font-bold mb-4 md:mb-6 tracking-wide uppercase px-4">(Juegos en Inglés)</h2>
+        <p className="text-xl sm:text-2xl md:text-3xl text-amber-600 font-bold italic px-4">¡Elige un juego! (Choose a game)</p>
       </div>
 
-      <div className="grid grid-cols-2 md:grid-cols-3 gap-8 md:gap-10 max-w-5xl w-full">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-10 max-w-5xl w-full pb-12">
         {games.map((game) => (
           <button
             key={game.id}

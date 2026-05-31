@@ -133,9 +133,9 @@ export default function Drawing({ onNavigate }: Props) {
       totalLevels={100}
       onNext={level < 100 ? handleNext : undefined}
     >
-      <div className="flex-1 w-full flex flex-col md:flex-row gap-6 p-4 md:p-8 max-w-[1400px]">
+      <div className="flex-1 w-full flex flex-col lg:flex-row gap-6 p-4 md:p-8 max-w-[1400px]">
         {/* Tools Palette */}
-        <div className="flex justify-center md:flex-col gap-4 bg-white p-6 rounded-[48px] border-4 border-amber-200 shadow-xl shrink-0">
+        <div className="flex flex-row lg:flex-col justify-center items-center gap-4 bg-white p-4 md:p-6 rounded-[32px] md:rounded-[48px] border-4 border-amber-200 shadow-xl shrink-0 flex-wrap">
           
           <button 
             onClick={() => { playSound('click'); setMode('pencil'); speak('Pencil'); }}
@@ -168,7 +168,7 @@ export default function Drawing({ onNavigate }: Props) {
           <div className="flex-1"></div>
 
           {/* Actions */}
-          <div className="flex md:flex-col gap-4 mt-auto pt-4">
+          <div className="flex lg:flex-col gap-4 lg:mt-auto pt-0 lg:pt-4 items-center">
              <button 
                onClick={handleClear}
                className="w-16 h-16 md:w-20 md:h-20 bg-rose-50 text-rose-500 border-2 border-rose-200 rounded-3xl flex items-center justify-center hover:bg-rose-100 hover:border-rose-300 transition-colors"
