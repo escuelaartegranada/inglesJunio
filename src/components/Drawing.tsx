@@ -200,82 +200,82 @@ export default function Drawing({ onNavigate }: Props) {
     >
       <div className="flex-1 w-full flex flex-col lg:flex-row gap-6 p-4 md:p-8 max-w-[1400px]">
         {/* Tools Palette */}
-        <div className="flex flex-col lg:w-48 bg-white p-4 md:p-6 rounded-[32px] md:rounded-[48px] border-4 border-amber-200 shadow-xl shrink-0 overflow-y-auto">
+        <div className="flex flex-row lg:flex-col w-full lg:w-48 bg-white p-3 lg:p-6 rounded-[24px] lg:rounded-[48px] border-4 border-amber-200 shadow-xl shrink-0 overflow-x-auto lg:overflow-y-auto lg:overflow-x-hidden items-center lg:items-stretch gap-3 lg:gap-0">
           
-          <div className="flex flex-row lg:flex-col justify-center items-center gap-4 flex-wrap">
+          <div className="flex flex-row lg:flex-col justify-center items-center gap-2 lg:gap-4 shrink-0">
             <button 
               onClick={() => { playSound('click'); setMode('pencil'); speak('Pencil'); }}
-              className={`w-12 h-12 md:w-14 md:h-14 rounded-2xl flex items-center justify-center transition-all bg-white border-4 ${mode === 'pencil' ? 'border-amber-400 -translate-y-1' : 'border-slate-100 hover:border-slate-200'}`}
+              className={`w-12 h-12 md:w-14 md:h-14 rounded-2xl flex items-center justify-center transition-all bg-white border-4 shrink-0 ${mode === 'pencil' ? 'border-amber-400 -translate-y-1 lg:-translate-y-1' : 'border-slate-100 hover:border-slate-200'}`}
             >
               <Pencil size={24} className={mode === 'pencil' ? 'text-amber-500' : 'text-slate-400'} />
             </button>
             
             <button 
               onClick={() => { playSound('click'); setMode('eraser'); speak('Eraser'); }}
-              className={`w-12 h-12 md:w-14 md:h-14 rounded-2xl flex items-center justify-center transition-all bg-white border-4 ${mode === 'eraser' ? 'border-pink-400 -translate-y-1' : 'border-slate-100 hover:border-slate-200'}`}
+              className={`w-12 h-12 md:w-14 md:h-14 rounded-2xl flex items-center justify-center transition-all bg-white border-4 shrink-0 ${mode === 'eraser' ? 'border-pink-400 -translate-y-1' : 'border-slate-100 hover:border-slate-200'}`}
             >
               <Eraser size={24} className={mode === 'eraser' ? 'text-pink-500' : 'text-slate-400'} />
             </button>
 
             <button 
               onClick={() => { playSound('click'); setMode('bucket'); speak('Fill'); }}
-              className={`w-12 h-12 md:w-14 md:h-14 rounded-2xl flex items-center justify-center transition-all bg-white border-4 ${mode === 'bucket' ? 'border-blue-400 -translate-y-1' : 'border-slate-100 hover:border-slate-200'}`}
+              className={`w-12 h-12 md:w-14 md:h-14 rounded-2xl flex items-center justify-center transition-all bg-white border-4 shrink-0 ${mode === 'bucket' ? 'border-blue-400 -translate-y-1' : 'border-slate-100 hover:border-slate-200'}`}
             >
               <PaintBucket size={24} className={mode === 'bucket' ? 'text-blue-500' : 'text-slate-400'} />
             </button>
 
             <button 
               onClick={() => { playSound('click'); setMode('square'); speak('Square'); }}
-              className={`w-12 h-12 md:w-14 md:h-14 rounded-2xl flex items-center justify-center transition-all bg-white border-4 ${mode === 'square' ? 'border-emerald-400 -translate-y-1' : 'border-slate-100 hover:border-slate-200'}`}
+              className={`w-12 h-12 md:w-14 md:h-14 rounded-2xl flex items-center justify-center transition-all bg-white border-4 shrink-0 ${mode === 'square' ? 'border-emerald-400 -translate-y-1' : 'border-slate-100 hover:border-slate-200'}`}
             >
               <Square size={24} className={mode === 'square' ? 'text-emerald-500' : 'text-slate-400'} />
             </button>
 
             <button 
               onClick={() => { playSound('click'); setMode('circle'); speak('Circle'); }}
-              className={`w-12 h-12 md:w-14 md:h-14 rounded-2xl flex items-center justify-center transition-all bg-white border-4 ${mode === 'circle' ? 'border-purple-400 -translate-y-1' : 'border-slate-100 hover:border-slate-200'}`}
+              className={`w-12 h-12 md:w-14 md:h-14 rounded-2xl flex items-center justify-center transition-all bg-white border-4 shrink-0 ${mode === 'circle' ? 'border-purple-400 -translate-y-1' : 'border-slate-100 hover:border-slate-200'}`}
             >
               <Circle size={24} className={mode === 'circle' ? 'text-purple-500' : 'text-slate-400'} />
             </button>
 
             <button 
               onClick={() => { playSound('click'); setMode('rainbow'); speak('Rainbow'); }}
-              className={`w-12 h-12 md:w-14 md:h-14 rounded-2xl flex items-center justify-center transition-all bg-white border-4 ${mode === 'rainbow' ? 'border-pink-400 -translate-y-1' : 'border-slate-100 hover:border-slate-200'} overflow-hidden relative`}
+              className={`w-12 h-12 md:w-14 md:h-14 rounded-2xl flex items-center justify-center transition-all bg-white border-4 shrink-0 ${mode === 'rainbow' ? 'border-pink-400 -translate-y-1' : 'border-slate-100 hover:border-slate-200'} overflow-hidden relative`}
             >
               {mode === 'rainbow' && <div className="absolute inset-0 bg-gradient-to-br from-rose-100 via-fuchsia-100 to-indigo-100 opacity-50" />}
               <Wand2 size={24} className={`relative z-10 ${mode === 'rainbow' ? 'text-rose-500' : 'text-slate-400'}`} />
             </button>
           </div>
 
-          <div className="h-1 w-full bg-amber-100 rounded-full my-4"></div>
+          <div className="w-1 h-12 lg:h-1 lg:w-full bg-amber-100 rounded-full mx-1 lg:mx-0 lg:my-4 shrink-0"></div>
 
           {/* Line widths */}
-          <div className="flex flex-row lg:flex-col gap-3 items-center justify-center mb-4">
-             <button onClick={() => { playSound('click'); setStrokeWidth('thin'); }} className={`w-10 h-10 flex items-center justify-center rounded-xl border-2 transition-all ${strokeWidth === 'thin' ? 'border-amber-400 bg-amber-50' : 'border-transparent'}`}>
+          <div className="flex flex-row lg:flex-col gap-2 lg:gap-3 items-center justify-center shrink-0">
+             <button onClick={() => { playSound('click'); setStrokeWidth('thin'); }} className={`w-10 h-10 flex items-center justify-center rounded-xl border-2 transition-all shrink-0 ${strokeWidth === 'thin' ? 'border-amber-400 bg-amber-50' : 'border-transparent'}`}>
                 <div className="bg-slate-800 rounded-full w-2 h-2"></div>
              </button>
-             <button onClick={() => { playSound('click'); setStrokeWidth('medium'); }} className={`w-10 h-10 flex items-center justify-center rounded-xl border-2 transition-all ${strokeWidth === 'medium' ? 'border-amber-400 bg-amber-50' : 'border-transparent'}`}>
+             <button onClick={() => { playSound('click'); setStrokeWidth('medium'); }} className={`w-10 h-10 flex items-center justify-center rounded-xl border-2 transition-all shrink-0 ${strokeWidth === 'medium' ? 'border-amber-400 bg-amber-50' : 'border-transparent'}`}>
                 <div className="bg-slate-800 rounded-full w-4 h-4"></div>
              </button>
-             <button onClick={() => { playSound('click'); setStrokeWidth('thick'); }} className={`w-10 h-10 flex items-center justify-center rounded-xl border-2 transition-all ${strokeWidth === 'thick' ? 'border-amber-400 bg-amber-50' : 'border-transparent'}`}>
+             <button onClick={() => { playSound('click'); setStrokeWidth('thick'); }} className={`w-10 h-10 flex items-center justify-center rounded-xl border-2 transition-all shrink-0 ${strokeWidth === 'thick' ? 'border-amber-400 bg-amber-50' : 'border-transparent'}`}>
                 <div className="bg-slate-800 rounded-full w-6 h-6"></div>
              </button>
           </div>
 
-          <div className="h-1 w-full bg-amber-100 rounded-full my-4"></div>
+          <div className="w-1 h-12 lg:h-1 lg:w-full bg-amber-100 rounded-full mx-1 lg:mx-0 lg:my-4 shrink-0"></div>
 
           {/* Color palette */}
-          <div className="grid grid-cols-6 lg:grid-cols-2 gap-2 mt-2 justify-items-center relative">
+          <div className="flex flex-row lg:grid lg:grid-cols-2 gap-2 justify-items-center relative shrink-0">
             {colors.map(c => (
               <button
                 key={c}
                 onClick={() => { playSound('click'); setColor(c); if(mode==='eraser' || mode==='rainbow') setMode('pencil'); }}
-                className={`w-8 h-8 md:w-10 md:h-10 rounded-full border-b-4 transition-all ${color === c && mode !== 'eraser' && mode !== 'rainbow' ? 'scale-110 border-transparent shadow-lg -translate-y-1' : 'border-black/20 hover:-translate-y-1 shadow-sm'}`}
+                className={`w-10 h-10 rounded-full border-b-4 transition-all shrink-0 ${color === c && mode !== 'eraser' && mode !== 'rainbow' ? 'scale-110 border-transparent shadow-lg -translate-y-1' : 'border-black/20 hover:-translate-y-1 shadow-sm'}`}
                 style={{ backgroundColor: c }}
               />
             ))}
             <label 
-               className={`w-8 h-8 md:w-10 md:h-10 rounded-full border-b-4 transition-all cursor-pointer flex items-center justify-center bg-[conic-gradient(from_0deg,red,yellow,lime,aqua,blue,magenta,red)] overflow-hidden relative ${!colors.includes(color) && mode !== 'eraser' && mode !== 'rainbow' ? 'scale-110 border-transparent shadow-lg -translate-y-1' : 'border-black/20 hover:-translate-y-1 shadow-sm'}`}
+               className={`w-10 h-10 rounded-full border-b-4 transition-all cursor-pointer flex items-center justify-center bg-[conic-gradient(from_0deg,red,yellow,lime,aqua,blue,magenta,red)] overflow-hidden relative shrink-0 ${!colors.includes(color) && mode !== 'eraser' && mode !== 'rainbow' ? 'scale-110 border-transparent shadow-lg -translate-y-1' : 'border-black/20 hover:-translate-y-1 shadow-sm'}`}
             >
               <input 
                 type="color" 
@@ -286,21 +286,22 @@ export default function Drawing({ onNavigate }: Props) {
             </label>
           </div>
 
-          <div className="flex-1 mt-6"></div>
+          <div className="hidden lg:block flex-1 mt-6"></div>
+          <div className="w-1 h-12 lg:hidden bg-amber-100 rounded-full mx-1 shrink-0"></div>
 
           {/* Actions */}
-          <div className="flex lg:flex-col gap-4 mt-auto items-center justify-center">
+          <div className="flex flex-row lg:flex-col gap-2 lg:gap-4 lg:mt-auto items-center justify-center shrink-0">
              <button 
                onClick={handleClear}
-               className="w-16 h-16 md:w-20 md:h-20 bg-rose-50 text-rose-500 border-2 border-rose-200 rounded-3xl flex items-center justify-center hover:bg-rose-100 hover:border-rose-300 transition-colors"
+               className="w-12 h-12 lg:w-16 lg:h-16 bg-rose-50 text-rose-500 border-2 border-rose-200 rounded-2xl lg:rounded-3xl flex items-center justify-center hover:bg-rose-100 hover:border-rose-300 transition-colors shrink-0"
              >
-               <Trash2 size={32} />
+               <Trash2 size={24} />
              </button>
              <button 
                onClick={handleSave}
-               className="flex w-16 h-16 md:w-20 md:h-20 bg-emerald-50 text-emerald-600 border-2 border-emerald-200 rounded-3xl items-center justify-center hover:bg-emerald-100 hover:border-emerald-300 transition-colors"
+               className="flex w-12 h-12 lg:w-16 lg:h-16 bg-emerald-50 text-emerald-600 border-2 border-emerald-200 rounded-2xl lg:rounded-3xl items-center justify-center hover:bg-emerald-100 hover:border-emerald-300 transition-colors shrink-0"
              >
-               <Download size={32} />
+               <Download size={24} />
              </button>
           </div>
 
